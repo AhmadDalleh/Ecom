@@ -13,16 +13,20 @@ namespace Ecom.infrastructure.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly AppDbContext _context;
+
         public GenericRepository(AppDbContext context)
         {
             _context = context;
         }
+
+        //Add Item 
         public async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
+        //Delete Item
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
@@ -30,10 +34,11 @@ namespace Ecom.infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        //Get all Items
         public async Task<IReadOnlyList<T>> GetAllAsync() 
            => await _context.Set<T>().AsNoTracking().ToListAsync();
         
-
+        //Get all Items withe other Items Types
         public async Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
             var query = _context.Set<T>().AsQueryable();
@@ -44,12 +49,15 @@ namespace Ecom.infrastructure.Repositories
             return await query.ToListAsync();
         }
 
+        //Get one Item
         public async Task<T> GetByIdAsync(int id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
             return entity;
         }
 
+
+        //Get One item with other item type 
         public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -61,6 +69,7 @@ namespace Ecom.infrastructure.Repositories
             return entity;
         }
 
+        //Edit Item 
         public async Task UpdateAsync(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
