@@ -1,6 +1,9 @@
 ﻿using Ecom.Core.Interfaces;
+using Ecom.infrastructure.Data;
 using Ecom.infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,13 +15,19 @@ namespace Ecom.infrastructure
 {
     public static class InfrastructureRegistration
     {
-        public static IServiceCollection infrastructureConfiguration(this IServiceCollection services) 
+        public static IServiceCollection infrastructureConfiguration(this IServiceCollection services,IConfiguration configuration ) 
         {
-            //services.AddTransient    // i use this when i don't have any save process just like email service or sender 
-            //services.AddScoped       // i use this when i have limited time save just like http request in AppDbContext 
-            //service.AddSingleton    // i use this for long time save 
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            //Apply Unit Of Work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //Apply DbContext
+            services.AddDbContext<AppDbContext>(op =>
+            {
+                op.UseSqlServer(configuration.GetConnectionString("EcomDatabase"));
+            });
             return services;
         }
     }
