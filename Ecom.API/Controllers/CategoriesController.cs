@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Ecom.API.Helper;
 using Ecom.Core.DTOs;
 using Ecom.Core.Entities.Product;
 using Ecom.Core.Interfaces;
@@ -22,7 +23,7 @@ namespace Ecom.API.Controllers
             {
                 var category = await work.CategoryRepository.GetAllAsync();
                 if (category is null)
-                    return BadRequest();
+                    return BadRequest(new ResponseAPI(400));
                 return Ok(category);
             }
             catch (Exception ex)
@@ -36,7 +37,7 @@ namespace Ecom.API.Controllers
             try
             {
                 var category = await work.CategoryRepository.GetByIdAsync(id);
-                if (category is null) return BadRequest();
+                if (category is null) return BadRequest(new ResponseAPI(400,$"The Category id {id} can't be found"));
                 return Ok(category);
             }
             catch (Exception ex)
@@ -52,7 +53,7 @@ namespace Ecom.API.Controllers
             {
                 var category = mapper.Map<Category>(categoryDTO);
                 await work.CategoryRepository.AddAsync(category);
-                return Ok(new { message = "Item has been Added" });
+                return Ok(new ResponseAPI(200,"Item has been added successfully"));
             }
             catch (Exception ex)
             {
@@ -66,7 +67,7 @@ namespace Ecom.API.Controllers
             {
                 var category = mapper.Map<Category>(categoryDTO);
                 await work.CategoryRepository.UpdateAsync(category);
-                return Ok(new { message = "Item has been updated" });
+                return Ok(new ResponseAPI(200, "Item has been updated successfully"));
             }
             catch (Exception ex)
             {
@@ -80,7 +81,7 @@ namespace Ecom.API.Controllers
             try
             {
                 await work.CategoryRepository.DeleteAsync(id);
-                return Ok(new { message = "item has been deleted" });
+                return Ok(new ResponseAPI(200, "Item has been deleted successfully"));
             }
             catch (Exception ex)
             {
