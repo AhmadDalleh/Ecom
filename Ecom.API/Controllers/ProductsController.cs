@@ -52,6 +52,51 @@ namespace Ecom.API.Controllers
             }
         }
 
-        [HttpPost("")]
+        [HttpPost("Add-Product")]
+        public async Task<IActionResult> add(AddProductDTO productDTO)
+        {
+            try
+            {
+                await work.ProductRepository.AddAsync(productDTO);
+                return Ok(new ResponseAPI(200));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseAPI(400,ex.Message));
+            }
+        }
+
+        [HttpPut("Update-Product")]
+        public async Task<IActionResult> Update(UpdateProductDTO updateProductDTO)
+        {
+            try
+            {
+                await work.ProductRepository.UpdateAsync(updateProductDTO);
+                return Ok(new ResponseAPI(200));
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new ResponseAPI(400, ex.Message));
+            }
+        }
+        [HttpDelete("Delete-Product/{Id}")]
+        public async Task<IActionResult>delete(int Id)
+        {
+            try
+            {
+                var product = await work.ProductRepository
+                    .GetByIdAsync(Id, x => x.Photos, x => x.Category);
+
+                await work.ProductRepository.DeleteAsync(product);
+          
+                return Ok(new ResponseAPI(200));
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new ResponseAPI(400, ex.Message));
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Ecom.Core.Entities.Product;
+﻿using Ecom.Core.DTOs;
+using Ecom.Core.Entities.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,12 @@ namespace Ecom.Core.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        // for future 
+        // for future
+        Task<bool> AddAsync(AddProductDTO productDto);
+
+        Task<bool> UpdateAsync(UpdateProductDTO updateProductDto);
+
+        Task DeleteAsync(Product product);
+
     }
 }
