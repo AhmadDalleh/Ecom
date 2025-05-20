@@ -16,12 +16,12 @@ namespace Ecom.API.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> get(string? sort)
+        public async Task<IActionResult> get(string? sort,int? CategoryId)
         {
             try
             {
                 var product = await work.ProductRepository
-                    .GetAllAsync(sort);
+                    .GetAllAsync(sort,CategoryId);
                
                 return Ok(product);
             }
