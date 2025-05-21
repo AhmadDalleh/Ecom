@@ -3,6 +3,7 @@ using Ecom.Core.DTOs;
 using Ecom.Core.Entities.Product;
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
+using Ecom.Core.Sharing;
 using Ecom.infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -26,33 +27,37 @@ namespace Ecom.infrastructure.Repositories
             this.imageManagementService = imageManagementService;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync(string? sort, int? CategoryId)
+        public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams)
         {
             var query = context.Products
                 .Include(m=>m.Category)
                 .Include(m=>m.Photos)
                 .AsNoTracking();
 
-            //filtering by category Id 
-            if (CategoryId.HasValue)
-               query = query.Where(m => m.CategoryId == CategoryId);
-            
+            //filtering by word 
+            if (!string.IsNullOrEmpty(productParams.Search))
+                query = query
+                    .Where(m => m.Name.ToLower().Contains(productParams.Search.ToLower()) 
+                    || 
+                    m.Description.ToLower().Contains(productParams.Search.ToLower()));
 
-            if (!string.IsNullOrEmpty(sort))
+            //filtering by category Id 
+            if (productParams.CategoryId.HasValue)
+               query = query.Where(m => m.CategoryId == productParams.CategoryId);
+            
+            //sort by price ascending and descending
+            if (!string.IsNullOrEmpty(productParams.Sort))
             {
-                switch (sort)
+                query = productParams.Sort switch
                 {
-                    case "PriceAsn":
-                        query = query.OrderBy(m=>m.NewPrice);
-                        break;
-                    case "PriceDes":
-                        query = query.OrderByDescending(m => m.NewPrice);
-                            break;
-                    default:
-                        query = query.OrderBy(m => m.Name);
-                        break;
-                }
+                    "PriceAcn" => query.OrderBy(m => m.NewPrice),
+                    "PriceDce" => query.OrderByDescending(m => m.NewPrice),
+                    _ => query.OrderBy(m => m.Name),
+                };
             }
+
+            query = query.Skip((productParams.pageSize) * (productParams.PageNumber - 1)).Take(productParams.pageSize);
+
             var result = mapper.Map<List<ProductDto>>(query);
             return result;
         }
