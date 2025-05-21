@@ -35,11 +35,18 @@ namespace Ecom.infrastructure.Repositories
                 .AsNoTracking();
 
             //filtering by word 
-            if (!string.IsNullOrEmpty(productParams.Search))
-                query = query
-                    .Where(m => m.Name.ToLower().Contains(productParams.Search.ToLower()) 
-                    || 
-                    m.Description.ToLower().Contains(productParams.Search.ToLower()));
+            if (!string.IsNullOrEmpty(productParams.Search)) 
+            {
+                var searchWords = productParams.Search.Split(' ');
+                query = query.Where(m => searchWords.All(word =>
+
+                m.Name.ToLower().Contains(word.ToLower())
+                ||
+                m.Description.ToLower().Contains(word.ToLower())
+
+                ));
+            }
+                
 
             //filtering by category Id 
             if (productParams.CategoryId.HasValue)

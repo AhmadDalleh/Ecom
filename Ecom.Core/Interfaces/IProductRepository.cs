@@ -14,6 +14,7 @@ namespace Ecom.Core.Interfaces
     {
         // for future
         Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams);
+
         Task<bool> AddAsync(AddProductDTO productDto);
 
         Task<bool> UpdateAsync(UpdateProductDTO updateProductDto);
