@@ -1,5 +1,6 @@
 using Ecom.API.Middleware;
 using Ecom.infrastructure;
+using Microsoft.Data.SqlClient;
 namespace Ecom.API
 {
     public class Program

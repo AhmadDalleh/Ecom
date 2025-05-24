@@ -19,7 +19,7 @@ namespace Ecom.infrastructure.Repositories.Service
         public async Task<List<string>> AddImageAsync(IFormFileCollection files, string src)
         {
             var saveImageSrc = new List<string>();
-            var ImageDirectory = Path.Combine("wwwroot", "Images", src);
+            var ImageDirectory = Path.Combine("wwwroot", "Images", src.Trim());
             if (Directory.Exists(ImageDirectory) is not true)
             {
                 Directory.CreateDirectory(ImageDirectory);
