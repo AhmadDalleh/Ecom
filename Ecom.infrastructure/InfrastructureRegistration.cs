@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +24,23 @@ namespace Ecom.infrastructure
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+
             //Apply Unit Of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //Apply Redis  Connection
+            //services.AddSingleton<IConnectionMultiplexer>( implementationFactory: i =>
+            //{
+            //    var config = ConfigurationOptions.Parse(configuration.GetConnectionString("redis"));
+            //    return ConnectionMultiplexer.Connect(config);
+            //});
 
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(
                 Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             services.AddSingleton<IImageManagementService, ImageManagementService>();
             //Apply DbContext
-            services.AddDbContext<AppDbContext>(op =>
+           services.AddDbContext<AppDbContext>(op =>
             {
                 op.UseSqlServer(configuration.GetConnectionString("EcomDatabase"));
             });

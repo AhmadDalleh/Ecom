@@ -13,7 +13,7 @@ namespace Ecom.Core.Interfaces
     public interface IProductRepository : IGenericRepository<Product>
     {
         // for future
-        Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams);
+        Task<ReturnProductDTO> GetAllAsync(ProductParams productParams);
 
         Task<bool> AddAsync(AddProductDTO productDto);
 

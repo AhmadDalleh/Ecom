@@ -2,6 +2,7 @@
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
 using Ecom.infrastructure.Data;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,11 @@ namespace Ecom.infrastructure.Repositories
         public IPhotoRepository PhotoRepository { get; }
         public IProductRepository ProductRepository { get; }
 
-        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService)
+        public ICustomerBasketRepositry CustomerBasketRepository {  get; }
+
+        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService
+            //IConnectionMultiplexer redis
+            )
         {
             _context = context;
             _mapper = mapper;
@@ -28,6 +33,7 @@ namespace Ecom.infrastructure.Repositories
             CategoryRepository = new CategoryRepository(_context);
             PhotoRepository = new PhotoRepository(_context);
             ProductRepository = new ProductRepository(_context,_mapper,_imageManagementService);
+            //CustomerBasketRepository = new CustomerBasketRepository(redis);
 
         }
     }

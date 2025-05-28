@@ -11,6 +11,7 @@ namespace Ecom.Core.DTOs
 {
     public record ProductDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal NewPrice { get; set; }
@@ -20,6 +21,11 @@ namespace Ecom.Core.DTOs
         public string CategoryName { get; set; }
     }
 
+    public record ReturnProductDTO
+    {
+        public List<ProductDto> products { get; set; }
+        public int TotalCount { get; set; }
+    }
     public record PhotoDto
     {
         public string ImageName { get; set; }
