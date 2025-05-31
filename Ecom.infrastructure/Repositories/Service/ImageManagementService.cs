@@ -1,6 +1,7 @@
 ﻿using Ecom.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,27 +17,29 @@ namespace Ecom.infrastructure.Repositories.Service
         {
             this.fileProvider = fileProvider;
         }
-        public async Task<List<string>> AddImageAsync(IFormFileCollection files, string src)
+
+        //this return list of images src
+        public async Task<List<string>> AddImageAsync(IFormFileCollection files, string src)//files the file it self that send in http , src the name of the prouct
         {
-            var saveImageSrc = new List<string>();
-            var ImageDirectory = Path.Combine("wwwroot", "Images", src.Trim());
-            if (Directory.Exists(ImageDirectory) is not true)
+            var saveImageSrc = new List<string>(); //the list of image the returns to controller
+            var ImageDirectory = Path.Combine("wwwroot", "Images", src.Trim());//where the image directory will be store in the wwwroot directory
+            if (Directory.Exists(ImageDirectory) is not true)//just check if the directory exist and created if it not by name of the product
             {
                 Directory.CreateDirectory(ImageDirectory);
             }
-            foreach (var item in files)
+            foreach (var item in files)//this for the all images that set to product
             {
-                if (item.Length > 0)
+                if (item.Length > 0)//if there is image in the item
                 {
                     //get image name
-                    var ImageName = item.FileName;
+                    var ImageName = item.FileName;//set image name to file name 
 
-                    var ImageSrc = $"/Images/{src}/{ImageName}";
-                    var root = Path.Combine(ImageDirectory, ImageName);
-                    using (FileStream stream = new FileStream(root, FileMode.Create))
+                    var ImageSrc = $"/Images/{src}/{ImageName}";//where image will be store
+                    var root = Path.Combine(ImageDirectory, ImageName);//insert the image name to the Image directory
+                    using (FileStream stream = new FileStream(root, FileMode.Create)) 
                     {
                         await item.CopyToAsync(stream);
-                    }
+                    }//this copy the image from root in the pc and apply it in image src 
                     saveImageSrc.Add(ImageSrc);
                 }
             }
