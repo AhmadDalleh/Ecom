@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace Ecom.Core.DTOs
 {
-    public record RegisterDTO
+    public record LoginDTO
+    {
+    
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    public record RegisterDTO:LoginDTO
     {
         public  string UserName { get; set; }
-        public  string Email { get; set; }
-        public  string Password { get; set; }
+
     }
 }

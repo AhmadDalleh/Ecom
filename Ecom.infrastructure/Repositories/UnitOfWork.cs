@@ -20,6 +20,8 @@ namespace Ecom.infrastructure.Repositories
         private readonly IImageManagementService _imageManagementService;
         //private readonly IConnectionMultiplexer redis;
         private readonly UserManager<AppUser> userManager;
+        private readonly IEmailService emailService;
+        private readonly SignInManager<AppUser> signInManager;
         public ICategoryRepository CategoryRepository { get; }
 
         public IPhotoRepository PhotoRepository { get; }
@@ -29,17 +31,19 @@ namespace Ecom.infrastructure.Repositories
 
         public IAuth Auth {  get; }
 
-        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService, IAuth auth, UserManager<AppUser> userManager) //IConnectionMultiplexer redis, )
+        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService, IAuth auth, UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager) //IConnectionMultiplexer redis, )
         {
             _context = context;
             _mapper = mapper;
             _imageManagementService = imageManagementService;
             //this.redis = redis;
             this.userManager = userManager;
+            this.emailService = emailService;
+            this.signInManager = signInManager;
             CategoryRepository = new CategoryRepository(_context);
             PhotoRepository = new PhotoRepository(_context);
             ProductRepository = new ProductRepository(_context, _mapper, _imageManagementService);
-            Auth = new AuthRepository(userManager);
+            Auth = new AuthRepository(userManager,emailService,signInManager);
             //CustomerBasketRepository = new CustomerBasketRepository(redis);
 
         }
