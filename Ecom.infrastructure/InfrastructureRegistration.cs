@@ -1,4 +1,5 @@
-﻿using Ecom.Core.Interfaces;
+﻿using Ecom.Core.Entities;
+using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
 using Ecom.infrastructure.Data;
 using Ecom.infrastructure.Repositories;
@@ -6,6 +7,7 @@ using Ecom.infrastructure.Repositories.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Extensions.Configuration;
@@ -37,11 +39,11 @@ namespace Ecom.infrastructure
             //register token
             services.AddScoped<IGenerateToken, GenerateToken>();
             //Apply Redis  Connection
-            //services.AddSingleton<IConnectionMultiplexer>( implementationFactory: i =>
-            //{
-            //    var config = ConfigurationOptions.Parse(configuration.GetConnectionString("redis"));
-            //    return ConnectionMultiplexer.Connect(config);
-            //});
+            services.AddSingleton<IConnectionMultiplexer>(implementationFactory: i =>
+            {
+                var config = ConfigurationOptions.Parse(configuration.GetConnectionString("redis"));
+                return ConnectionMultiplexer.Connect(config);
+            });
 
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(
                 Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
@@ -52,6 +54,7 @@ namespace Ecom.infrastructure
             {
                 op.UseSqlServer(configuration.GetConnectionString("EcomDatabase"));
             });
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
             services.AddAuthentication(op =>
             {
                 op.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

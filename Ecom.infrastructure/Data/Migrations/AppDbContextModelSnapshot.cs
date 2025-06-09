@@ -63,7 +63,7 @@ namespace Ecom.infrastructure.Data.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Ecom.Core.Entities.AppUser", b =>
@@ -154,7 +154,7 @@ namespace Ecom.infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -184,7 +184,7 @@ namespace Ecom.infrastructure.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photos", (string)null);
 
                     b.HasData(
                         new
@@ -224,7 +224,7 @@ namespace Ecom.infrastructure.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new

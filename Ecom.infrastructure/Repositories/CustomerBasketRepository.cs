@@ -1,7 +1,5 @@
 ﻿using Ecom.Core.Entities;
 using Ecom.Core.Interfaces;
-using Microsoft.AspNetCore.Connections.Features;
-using Microsoft.EntityFrameworkCore.Storage;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -12,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Ecom.infrastructure.Repositories
 {
-    public class CustomerBasketRepository : ICustomerBasketRepositry
+    public class CustomerBasketRepository : ICustomerBasketRepository
     {
-        private readonly StackExchange.Redis.IDatabase _database;
+        private readonly IDatabase _database;
         public CustomerBasketRepository(IConnectionMultiplexer redis)
         {
             _database = redis.GetDatabase();

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ecom.infrastructure.Repositories
+namespace Ecom.infrastructure.Repositories.Service
 {
     public class EmailService : IEmailService
     {//SMTP 
@@ -21,23 +21,23 @@ namespace Ecom.infrastructure.Repositories
         {
             MimeMessage message = new();
 
-            message.From.Add(new MailboxAddress("My Ecom", configuration["EmailSetting:From"]));
+            message.From.Add(new MailboxAddress("Ecom", configuration["EmailSetting:From"]));
             message.Subject = emailDTO.Subject;
             message.To.Add(new MailboxAddress(emailDTO.To, emailDTO.To));
             message.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
                 Text = emailDTO.Content,
             };
-            using(var smtp=new MailKit.Net.Smtp.SmtpClient())
+            using (var smtp = new MailKit.Net.Smtp.SmtpClient())
             {
+                smtp.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
                 try
                 {
                     await smtp.ConnectAsync(
                         configuration["EmailSetting:Smtp"],
                         int.Parse(configuration["EmailSetting:Port"]), true);
-
-                    await smtp.AuthenticateAsync(
-                        configuration["EmailSetting:UserName"],
+                    await smtp.AuthenticateAsync(configuration["EmailSetting:Username"],
                         configuration["EmailSetting:Password"]);
 
                     await smtp.SendAsync(message);
@@ -45,12 +45,11 @@ namespace Ecom.infrastructure.Repositories
                 }
                 catch (Exception ex)
                 {
-
                     throw;
                 }
                 finally
                 {
-                    smtp.Disconnected(true);
+                    smtp.Disconnect(true);
                     smtp.Dispose();
                 }
             }

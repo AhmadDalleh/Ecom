@@ -37,7 +37,7 @@ namespace Ecom.infrastructure.Repositories.Service
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
-                Issuer = configuration["Token:"],
+                Issuer = configuration["Token:Issuer"],
                 SigningCredentials = credentials,
                 NotBefore = DateTime.Now,
             };

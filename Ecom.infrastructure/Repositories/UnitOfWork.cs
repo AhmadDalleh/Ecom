@@ -18,7 +18,7 @@ namespace Ecom.infrastructure.Repositories
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         private readonly IImageManagementService _imageManagementService;
-        //private readonly IConnectionMultiplexer redis;
+        private readonly IConnectionMultiplexer redis;
         private readonly UserManager<AppUser> userManager;
         private readonly IEmailService emailService;
         private readonly SignInManager<AppUser> signInManager;
@@ -28,17 +28,18 @@ namespace Ecom.infrastructure.Repositories
         public IPhotoRepository PhotoRepository { get; }
         public IProductRepository ProductRepository { get; }
 
-        public ICustomerBasketRepositry CustomerBasketRepository {  get; }
+        public ICustomerBasketRepository CustomerBasketRepository {  get; }
 
         public IAuth Auth {  get; }
 
         public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService, 
-            IAuth auth, UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager, IGenerateToken token) //IConnectionMultiplexer redis, )
+            IConnectionMultiplexer redis,UserManager<AppUser> userManager, IEmailService emailService,
+            SignInManager<AppUser> signInManager, IGenerateToken token)
         {
             _context = context;
             _mapper = mapper;
             _imageManagementService = imageManagementService;
-            //this.redis = redis;
+            this.redis = redis;
             this.userManager = userManager;
             this.emailService = emailService;
             this.signInManager = signInManager;
@@ -46,8 +47,8 @@ namespace Ecom.infrastructure.Repositories
             CategoryRepository = new CategoryRepository(_context);
             PhotoRepository = new PhotoRepository(_context);
             ProductRepository = new ProductRepository(_context, _mapper, _imageManagementService);
-            Auth = new AuthRepository(userManager, emailService, signInManager,token);
-            //CustomerBasketRepository = new CustomerBasketRepository(redis);
+            CustomerBasketRepository = new CustomerBasketRepository(redis);
+            Auth = new AuthRepository(userManager, emailService, signInManager, token,context);
 
         }
     }
