@@ -3,6 +3,7 @@ using Ecom.Core.Entities;
 using Ecom.Core.Interfaces;
 using Ecom.Core.Services;
 using Ecom.Core.Sharing;
+using Ecom.infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,15 @@ namespace Ecom.infrastructure.Repositories
         private readonly IEmailService emailService;
         private readonly SignInManager<AppUser> signInManager;
         private readonly IGenerateToken generateToken;
-        public AuthRepository(UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager, IGenerateToken genrateToken)
+        private readonly AppDbContext context;
+
+        public AuthRepository(UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager, IGenerateToken genrateToken, AppDbContext context)
         {
             this.userManager = userManager;
             this.emailService = emailService;
             this.signInManager = signInManager;
             this.generateToken = genrateToken;
+            this.context = context;
         }
 
         public async Task<string> RegisterAsync(RegisterDTO registerDTO )
@@ -40,11 +44,14 @@ namespace Ecom.infrastructure.Repositories
             {
                 return "this User Email is already registered";
             }
-            AppUser user = new AppUser()
+            AppUser user = new()
             {
                 Email = registerDTO.Email,
                 UserName = registerDTO.UserName,
+                DisplayName = registerDTO.DisplayName
             };
+
+
             var result = await  userManager.CreateAsync(user,registerDTO.Password);
             if (result.Succeeded is not true) 
             {
