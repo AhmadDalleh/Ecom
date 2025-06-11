@@ -21,12 +21,12 @@ namespace Ecom.infrastructure.Repositories
         private readonly IGenerateToken generateToken;
         private readonly AppDbContext context;
 
-        public AuthRepository(UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager, IGenerateToken genrateToken, AppDbContext context)
+        public AuthRepository(UserManager<AppUser> userManager, IEmailService emailService, SignInManager<AppUser> signInManager, IGenerateToken generateToken, AppDbContext context)
         {
             this.userManager = userManager;
             this.emailService = emailService;
             this.signInManager = signInManager;
-            this.generateToken = genrateToken;
+            this.generateToken = generateToken;
             this.context = context;
         }
 
@@ -59,7 +59,7 @@ namespace Ecom.infrastructure.Repositories
             }
             // Send Active Email
             string token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-           await SendEmail(user.Email, token, "active", "ActiveEmail", "Please active your email,click on submit to active your email");
+            await SendEmail(user.Email, token, "active", "ActiveEmail", "Please active your email,click on submit to active your email");
             return "done";
         }
         public async Task SendEmail(string email,string code,string component , string subject,string message)
