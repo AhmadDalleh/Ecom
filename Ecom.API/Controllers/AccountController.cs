@@ -2,7 +2,6 @@
 using Ecom.API.Helper;
 using Ecom.Core.DTOs;
 using Ecom.Core.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecom.API.Controllers
@@ -25,12 +24,12 @@ namespace Ecom.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult>login(LoginDTO loginDTO)
+        public async Task<IActionResult> login(LoginDTO loginDTO)
         {
             var result = await work.Auth.LoginAsync(loginDTO);
             if (result.StartsWith("please"))
             {
-                return BadRequest(new ResponseAPI(400,result));
+                return BadRequest(new ResponseAPI(400, result));
             }
             Response.Cookies.Append("token", result, new CookieOptions
             {
@@ -44,7 +43,7 @@ namespace Ecom.API.Controllers
             return Ok(new ResponseAPI(200));
         }
         [HttpPost("active-account")]
-        public async Task<IActionResult>active(ActiveAccountDTO accountDTO)
+        public async Task<IActionResult> active(ActiveAccountDTO accountDTO)
         {
             var result = await work.Auth.ActiveAccount(accountDTO);
             return result ? Ok(new ResponseAPI(200)) : BadRequest(new ResponseAPI(400));
@@ -55,5 +54,19 @@ namespace Ecom.API.Controllers
             var result = await work.Auth.SendEmailForForgetPassword(email);
             return result ? Ok(new ResponseAPI(200)) : BadRequest(new ResponseAPI(400));
         }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> reset(ResetPasswordDTO resetPasswordDTO)
+        {
+            var result = await work.Auth.ResetPassword(resetPasswordDTO);
+            if (result == "done")
+            {
+                return Ok(new ResponseAPI(200));
+            }
+            return BadRequest(new ResponseAPI(400));
+        }
+
     }
 }
+
+
