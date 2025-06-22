@@ -3,7 +3,7 @@ using Ecom.Core.DTOs;
 using Ecom.Core.Entities.Product;
 using System.Runtime;
 
-namespace Ecom.API.Controllers.Mapping
+namespace Ecom.API.Mapping
 {
     public class CategoryMapping:Profile
     {

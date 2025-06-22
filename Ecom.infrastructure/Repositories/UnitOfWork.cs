@@ -28,7 +28,7 @@ namespace Ecom.infrastructure.Repositories
         public IPhotoRepository PhotoRepository { get; }
         public IProductRepository ProductRepository { get; }
 
-        public ICustomerBasketRepository CustomerBasketRepository {  get; }
+        public ICustomerBasketRepository CustomerBasket {  get; }
 
         public IAuth Auth {  get; }
 
@@ -47,7 +47,7 @@ namespace Ecom.infrastructure.Repositories
             CategoryRepository = new CategoryRepository(_context);
             PhotoRepository = new PhotoRepository(_context);
             ProductRepository = new ProductRepository(_context, _mapper, _imageManagementService);
-            CustomerBasketRepository = new CustomerBasketRepository(redis);
+            CustomerBasket = new CustomerBasketRepository(redis);
             Auth = new AuthRepository(userManager, emailService, signInManager, token,context);
 
         }

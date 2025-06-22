@@ -17,7 +17,7 @@ namespace Ecom.API.Controllers
         [HttpGet("get-basket-item/{id}")]
         public async Task<IActionResult> get(string id)
         {
-            var result = await work.CustomerBasketRepository.GetBasketAsync(id);
+            var result = await work.CustomerBasket.GetBasketAsync(id);
             if (result is null)
             {
                 return Ok(new CustomerBasket());
@@ -28,13 +28,13 @@ namespace Ecom.API.Controllers
         [HttpPost("update-basket")]
         public async Task<IActionResult> add(CustomerBasket basket)
         {
-            var _basket = await work.CustomerBasketRepository.UpdateBasketAsync(basket);
+            var _basket = await work.CustomerBasket.UpdateBasketAsync(basket);
             return Ok(_basket);
         }
         [HttpDelete("delete-basket-item/{id}")]
         public async Task<IActionResult> delete(string id)
         {
-            var result = await work.CustomerBasketRepository.DeleteBasketAsync(id);
+            var result = await work.CustomerBasket.DeleteBasketAsync(id);
             return result ? Ok(new ResponseAPI(200, "item deleted"))
                 : BadRequest(new ResponseAPI(400));
         }

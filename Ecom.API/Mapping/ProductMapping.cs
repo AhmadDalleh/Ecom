@@ -4,7 +4,7 @@ using Ecom.Core.Entities.Product;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ecom.API.Controllers.Mapping
+namespace Ecom.API.Mapping
 {
    public class ProductMapping : Profile
     {
